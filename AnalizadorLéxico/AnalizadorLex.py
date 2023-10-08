@@ -521,4 +521,14 @@ def automataRESIDEN(lista):
                     return lista
 
         i = i + 1
-        
+
+
+simbolos = {'<': 'LESS', '<=': 'LESS-EQUAL', '>': 'GREATER', '>=': 'GREATER_EQUAL', '!': 'BANG', '!=': 'BANG_EQUAL',
+            '=': 'EQUAL', '==': 'EQUAL_EQUAL', '+': 'PLUS', '-': 'MINUS', '*': 'STAR', '/': 'SLASH', '{': 'LEFT_BRACE',
+            '}': 'RIGHT_BRACE', '(': 'LEFT_PAREN', ')': 'RIGHT_PAREN', ',': 'COMMA', '.': 'DOT', ';': 'SEMICOLON'}
+simbolos_key = simbolos.keys()
+reservadas = {'and': 'AND', 'else': 'ELSE', 'false': 'FALSE', 'for': 'FOR', 'fun': 'FUN', 'if': 'IF', 'null': 'NULL',
+              'or': 'OR', 'print': 'PRINT', 'return': 'RETURN', 'true': 'TRUE', 'var': 'VAR', 'while': 'WHILE'}
+reservadas_key = reservadas.keys()
+
+main()
