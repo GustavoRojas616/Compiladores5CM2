@@ -124,5 +124,208 @@ def ejecutar_prompt():
 
 
         print("Tokens registrados:", lista_tokens)
+        
+def automataNUM(lista):
+    global lista_tokens
+    state=0
+    if '\n' in lista:
+        pass
+    else:
+        lista.append("\n")
+    tama = len(lista)
+    #print(lista)
+    for i in range(tama):
+        if state==0:
+            id=str(lista[i])
+            #print(lista[i])
+            if str(lista[i]).isnumeric()==True:
+                state = 15
+                #print("15")
+                continue
+        if state==15:
+            #print(lista[i])
+            id=id+str(lista[i])
+            if str(lista[i]).isnumeric() == True:
+                state = 15
+                continue
+            elif str(lista[i])=='.':
+                state = 16
+                continue
+            elif str(lista[i])=='E':
+                state=18
+                continue
+            #elif str(lista[i]).isalpha()==True:
+            #    state=-1
+            #    continue
+            else:
+                state=22
+                #print(id)
+                #print("Aceptación")
+        if state==16:
+            #print(lista[i])
+            id = id + str(lista[i])
+            if str(lista[i]).isnumeric() == True:
+                state = 17
+                continue
+        if state==17:
+            id = id + str(lista[i])
+            if str(lista[i]).isnumeric() == True:
+                state = 17
+                continue
+            elif str(lista[i])=='E':
+                state=18
+                continue
+            #elif str(lista[i])=='.':
+            #    state=-1
+            #    continue
+            else:
+                state=23
+                #print(id)
+                #print("Aceptación")
+        if state==18:
+            id = id + str(lista[i])
+            if str(lista[i])=='+' or str(lista[i])=='-':
+                state=19
+                continue
+            elif str(lista[i]).isnumeric() == True:
+                state=20
+                continue
+        if state==19:
+            id = id + str(lista[i])
+            if str(lista[i]).isnumeric() == True:
+                state=20
+                continue
+        if state==20:
+            id = id + str(lista[i])
+            if str(lista[i]).isnumeric() == True:
+                state=20
+                continue
+            #elif str(lista[i])=='.':
+            #    state=-1
+            #    continue
+            else:
+                state=21
+                #print(id)
+                #print("Aceptación")
+        if state==-1:
+            if str(lista[i]).isdigit()==True or str(lista[i])=='.' or str(lista[i])=='E' :
+                id = id + str(lista[i])
+                continue
+            else:
+                break
+            #print("Error")
+
+    if state==21 or state==22 or state==23:
+        id = list(id)
+        id.pop(-1)
+        ite = len(id)
+        for i in range(ite):
+            lista.remove(id[i])
+        if '.' in id:
+            z = 0
+        elif 'E' in id:
+            z = 1
+        else:
+            z = 2
+        id = ''.join(id)
+        if z == 0:
+            # y = ''.join(filter(lambda x: x.isdigit() or x in ['-', '+'], id))
+            y = float(id)
+        elif z == 1:
+            y = ''.join(filter(lambda x: x.isdigit() or x in ['-', '+'], id))
+            y = float(id)
+        elif z == 2:
+            y = int(id)
+        print("<NUMBER " + str(id) + " " + str(y) + ">")
+        lista_tokens.append(y)
+        return lista
+    else:
+        print("Número inválido.")
+        lista_tokens = []
+        id = list(id)
+        ite = len(id)
+        for i in range(ite):
+            lista.remove(id[i])
+        return lista
 
 
+
+def automataCOMEN(lista):
+    global lista_tokens
+    if '\n' in lista:
+        pass
+    else:
+        lista.append("\n")
+    tama=len(lista)
+    #print(lista, tama)
+    state=0
+    for i in range(tama):
+        if state==0:
+            if lista[i]=='/':
+                state=26
+                id = str(lista[i])
+                #print("26")
+                continue
+        if state==26:
+            if lista[i]=='*':
+                state=27
+                #print("27")
+                id = id + str(lista[i])
+                continue
+            elif lista[i]=='/':
+                state=30
+                id = id + str(lista[i])
+                continue
+            else:
+                state=32
+                return 0, lista
+        if state==27:
+            if lista[i]=='*':
+                state=28
+                id = id + str(lista[i])
+                continue
+            else:
+                state=27
+                #print("Estoy aqui")
+                id = id + str(lista[i])
+                continue
+        if state==28:
+            if lista[i]=='*':
+                state=28
+                id = id + str(lista[i])
+                continue
+            if lista[i]=='/':
+                state=29
+                id = id + str(lista[i])
+                #print("Comentario multilinea")
+            else:
+                state=27
+                id = id + str(lista[i])
+                continue
+        if state==30:
+            if lista[i]=='\n':
+                state=31
+                id = id + str(lista[i])
+                #print("Comentario unilinea")
+            else:
+                state=30
+                id = id + str(lista[i])
+                continue
+    #print(state)
+    if state==29 or state==31 or state==32:
+        id = list(id)
+        #print(id)
+        ite = len(id)
+        for i in range(ite):
+            lista.remove(id[i])
+        return 1, lista
+    else:
+        print("Error. Comentario multilínea sin cerrar.")
+        lista_tokens = []
+        id = list(id)
+        # print(id)
+        ite = len(id)
+        for i in range(ite):
+            lista.remove(id[i])
+        return 1, lista
+        
