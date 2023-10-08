@@ -409,3 +409,56 @@ def automata1CARAC(lista):
                     return lista
 
         
+
+def automataCAD(lista):
+    global lista_tokens
+    tama=len(lista)
+    state=0
+    #print(lista)
+    for i in range(tama):
+        if i==tama-1 and state==0 and str(lista[i])=='"':
+            print("Error. Cadena inválida.")
+            lista_tokens = []
+            id=list(lista)
+            ite = len(lista)
+            for i in range(ite):
+                lista.remove(id[i])
+                #print(lista)
+            return lista
+        elif state==0 and str(lista[i])=='"':
+            id = str(lista[i])
+            state=24
+        if i>0 and state==24:
+            id = id + str(lista[i])
+            state=24
+        if i>0 and state==24 and str(lista[i])=='"':
+            prov=id.replace('"', '')
+            print("<STRING " +id + " " + prov +">")
+            lista_tokens.append(id)
+            id=list(id)
+            #print(id)
+            ite = len(id)
+            for i in range(ite):
+                lista.remove(id[i])
+                #print(lista)
+            return lista
+        elif i>0 and state==24 and str(lista[i])=='\n':
+            print("Error. Cadena inválida.")
+            lista_tokens = []
+            id = list(lista)
+            ite = len(lista)
+            for i in range(ite):
+                lista.remove(id[i])
+                # print(lista)
+            return lista
+        if i==tama-1 and str(lista[i])!='"':
+            print("Error. Cadena inválida.")
+            lista_tokens = []
+            id=list(id)
+            ite = len(id)
+            for i in range(ite):
+                lista.remove(id[i])
+                #print(lista)
+            return lista
+        i=i+1
+        
