@@ -461,4 +461,64 @@ def automataCAD(lista):
                 #print(lista)
             return lista
         i=i+1
+
+def automataRESIDEN(lista):
+    tama=len(lista)
+    state=0
+    #print(lista)
+    for i in range(tama):
+        if state==0 and (str(lista[i]).isalpha()==True):
+            #print(lista[i])
+            id = str(lista[i])
+            state = 13
+
+        if i>0 and state==13 and (str(lista[i]).isalpha()==True or str(lista[i]).isdigit()==True) :
+            #print(lista[i])
+            id = id + str(lista[i])
+
+        if i>0 and state==13 and str(lista[i]).isalpha()==False and str(lista[i]).isdigit()==False:
+            state=14
+            id = id + str(lista[i])
+            id=list(id)
+            id.pop(-1)
+            id=''.join(id)
+
+            for token in [id]:
+                if token in reservadas_key:
+                    print("<" + reservadas[token] + " " + str(id) + " null>")
+                    lista_tokens.append(str(id))
+                    id = list(id)
+                    ite = len(id)
+                    for i in range(ite):
+                        lista.remove(id[i])
+                    return lista
+                else:
+                    print("<IDENTIFIER " +id + " null>")
+                    lista_tokens.append(id)
+                    id = list(id)
+                    ite = len(id)
+                    for i in range(ite):
+                        lista.remove(id[i])
+                    return lista
+
+        if i==tama-1:
+            for token in [id]:
+                if token in reservadas_key:
+                    print("<" + reservadas[token] + " " + str(id) + " null>")
+                    lista_tokens.append(str(id))
+                    id = list(id)
+                    ite = len(id)
+                    for i in range(ite):
+                        lista.remove(id[i])
+                    return lista
+                else:
+                    print("<IDENTIFIER " + id + " null>")
+                    lista_tokens.append(id)
+                    id = list(id)
+                    ite = len(id)
+                    for i in range(ite):
+                        lista.remove(id[i])
+                    return lista
+
+        i = i + 1
         
