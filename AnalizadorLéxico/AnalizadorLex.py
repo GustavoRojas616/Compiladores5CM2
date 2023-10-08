@@ -328,4 +328,84 @@ def automataCOMEN(lista):
         for i in range(ite):
             lista.remove(id[i])
         return 1, lista
+
+def automataM1CARAC(id, lista):
+    tama=len(lista)
+    for token in [id]:
+        if token in simbolos_key:
+            print("<" + simbolos[token] + " " + str(id) + " null>")
+            lista_tokens.append(str(id))
+            id = list(id)
+            ite = len(id)
+            for i in range(ite):
+                lista.remove(id[i])
+            return lista
+        else:
+            return 0
+
+def automata1CARAC(lista):
+    tama=len(lista)
+    state=0
+    id=''
+    aux=0
+    cond=1
+    c=0
+    #print(lista)
+    for i in range(tama):
+        if state==0 and str(lista[i]).isdigit()==False and str(lista[i]).isalpha()==False:
+            state=1
+            id=id + str(lista[i])
+            #print(id)
+        if i>0 and state==1 and (str(lista[i]).isdigit()==False and str(lista[i]).isalpha()==False):
+            state=2
+            aux=0
+            id = id + str(lista[i])
+            aux=automataM1CARAC(id, lista)
+            #print(aux)
+            if aux!=0:
+                return aux
+            else:
+                id=list(id)
+                id.pop(-1)
+                id=''.join(id)
+                #print(id)
+                c=1
+                cond=0
+
+        if i==tama-1:
+            #id = id + str(lista[i])
+            #print(id)
+            for token in [id]:
+                if token in simbolos_key:
+                    print("<" + simbolos[token] + " " + str(id) + " null>")
+                    lista_tokens.append(str(id))
+                    id = list(id)
+                    ite = len(id)
+                    for i in range(ite):
+                        lista.remove(id[i])
+                    #print(lista)
+                    return lista
+        if str(lista[i]).isalpha()==True:
+            for token in [id]:
+                if token in simbolos_key:
+                    print("<" + simbolos[token] + " " + str(id) + " null>")
+                    lista_tokens.append(str(id))
+                    id = list(id)
+                    ite = len(id)
+                    for i in range(ite):
+                        lista.remove(id[i])
+                        #print(lista)
+                    return lista
+        if cond==0 and str(lista[i-c]).isalpha() == False:
+            for token in [id]:
+                if token in simbolos_key:
+                    print("<" + simbolos[token] + " " + str(id) + " null>")
+                    lista_tokens.append(str(id))
+                    id = list(id)
+                    ite = len(id)
+                    for i in range(ite):
+                        lista.remove(id[i])
+                        #print(lista)
+                    return lista
+
         
