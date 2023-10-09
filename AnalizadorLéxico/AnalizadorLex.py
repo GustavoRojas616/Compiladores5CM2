@@ -27,7 +27,7 @@ def ejecutar_archivo(nombre_archivo):
             else:
                 aux = 1
                 print("Error léxico.")
-                lista_tokens = []
+                #lista_tokens = []
                 break
                 if len(b) == 1:
                     # print("Hola")
@@ -85,7 +85,7 @@ def ejecutar_prompt():
             else:
                 aux = 1
                 print("Error léxico.")
-                lista_tokens = []
+                #lista_tokens = []
                 break
                 if len(b) == 1:
                     # print("Hola")
@@ -241,7 +241,7 @@ def automataNUM(lista):
         return lista
     else:
         print("Número inválido.")
-        lista_tokens = []
+        #lista_tokens = []
         id = list(id)
         ite = len(id)
         for i in range(ite):
@@ -321,7 +321,7 @@ def automataCOMEN(lista):
         return 1, lista
     else:
         print("Error. Comentario multilínea sin cerrar.")
-        lista_tokens = []
+        #lista_tokens = []
         id = list(id)
         # print(id)
         ite = len(id)
@@ -418,7 +418,7 @@ def automataCAD(lista):
     for i in range(tama):
         if i==tama-1 and state==0 and str(lista[i])=='"':
             print("Error. Cadena inválida.")
-            lista_tokens = []
+            #lista_tokens = []
             id=list(lista)
             ite = len(lista)
             for i in range(ite):
@@ -444,7 +444,7 @@ def automataCAD(lista):
             return lista
         elif i>0 and state==24 and str(lista[i])=='\n':
             print("Error. Cadena inválida.")
-            lista_tokens = []
+            #lista_tokens = []
             id = list(lista)
             ite = len(lista)
             for i in range(ite):
@@ -453,7 +453,7 @@ def automataCAD(lista):
             return lista
         if i==tama-1 and str(lista[i])!='"':
             print("Error. Cadena inválida.")
-            lista_tokens = []
+            #lista_tokens = []
             id=list(id)
             ite = len(id)
             for i in range(ite):
