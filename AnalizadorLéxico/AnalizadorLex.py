@@ -29,7 +29,7 @@ def ejecutar_archivo(nombre_archivo):
                 aux = 1
                 print("Error léxico.")
                 print("No se realizará el análisis sintáctico.")
-                #lista_tokens = []
+                lista_tokens = []
                 break
                 if len(b) == 1:
                     # print("Hola")
@@ -91,7 +91,7 @@ def ejecutar_prompt():
                 aux = 1
                 print("Error léxico.")
                 print("No se realizará el análisis sintáctico.")
-                #lista_tokens = []
+                lista_tokens = []
                 break
                 if len(b) == 1:
                     # print("Hola")
@@ -332,7 +332,7 @@ def automataCOMEN(lista):
     else:
         print("Error. Comentario multilínea sin cerrar.")
         print("No se realizará el análisis sintáctico.")
-        #lista_tokens = []
+        lista_tokens = []
         id = list(id)
         # print(id)
         ite = len(id)
@@ -434,7 +434,7 @@ def automataCAD(lista):
         if i==tama-1 and state==0 and str(lista[i])=='"':
             print("Error. Cadena inválida.")
             print("No se realizará el análisis sintáctico.")
-            #lista_tokens = []
+            lista_tokens = []
             id=list(lista)
             ite = len(lista)
             for i in range(ite):
@@ -462,7 +462,7 @@ def automataCAD(lista):
         elif i>0 and state==24 and str(lista[i])=='\n':
             print("Error. Cadena inválida.")
             print("No se realizará el análisis sintáctico.")
-            #lista_tokens = []
+            lista_tokens = []
             id = list(lista)
             ite = len(lista)
             for i in range(ite):
@@ -472,7 +472,7 @@ def automataCAD(lista):
         if i==tama-1 and str(lista[i])!='"':
             print("Error. Cadena inválida.")
             print("No se realizará el análisis sintáctico.")
-            #lista_tokens = []
+            lista_tokens = []
             id=list(id)
             ite = len(id)
             for i in range(ite):
