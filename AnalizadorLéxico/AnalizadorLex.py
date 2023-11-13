@@ -2,6 +2,7 @@
 import os
 import sys
 
+
 lista_tokens=[]
 def main():
     if len(sys.argv) > 2:
@@ -27,6 +28,7 @@ def ejecutar_archivo(nombre_archivo):
             else:
                 aux = 1
                 print("Error léxico.")
+                print("No se realizará el análisis sintáctico.")
                 #lista_tokens = []
                 break
                 if len(b) == 1:
@@ -63,7 +65,10 @@ def ejecutar_archivo(nombre_archivo):
                         b = automata1CARAC(tokens)
             elif str(b[0]).isdigit() == True:
                 b = automataNUM(tokens)
-        print("Tokens registrados:", lista_tokens)
+        if len(lista_tokens) > 0:
+            nid = {'tipo': 'EOF', 'lexema': '', 'valor': 'null'}
+            lista_tokens.append(nid)
+            print("Tokens registrados:", lista_tokens)
 
 
     else:
@@ -85,6 +90,7 @@ def ejecutar_prompt():
             else:
                 aux = 1
                 print("Error léxico.")
+                print("No se realizará el análisis sintáctico.")
                 #lista_tokens = []
                 break
                 if len(b) == 1:
@@ -123,7 +129,10 @@ def ejecutar_prompt():
                 b = automataNUM(tokens)
 
 
-        print("Tokens registrados:", lista_tokens)
+        if len(lista_tokens) > 0:
+            nid = {'tipo': 'EOF', 'lexema': '', 'valor': 'null'}
+            lista_tokens.append(nid)
+            print("Tokens registrados:", lista_tokens)
         
 def automataNUM(lista):
     global lista_tokens
@@ -237,7 +246,8 @@ def automataNUM(lista):
         elif z == 2:
             y = int(id)
         print("<NUMBER " + str(id) + " " + str(y) + ">")
-        lista_tokens.append(y)
+        nid = {'tipo': 'NUMBER', 'lexema': str(id), 'valor': y}
+        lista_tokens.append(nid)
         return lista
     else:
         print("Número inválido.")
@@ -321,6 +331,7 @@ def automataCOMEN(lista):
         return 1, lista
     else:
         print("Error. Comentario multilínea sin cerrar.")
+        print("No se realizará el análisis sintáctico.")
         #lista_tokens = []
         id = list(id)
         # print(id)
@@ -334,7 +345,8 @@ def automataM1CARAC(id, lista):
     for token in [id]:
         if token in simbolos_key:
             print("<" + simbolos[token] + " " + str(id) + " null>")
-            lista_tokens.append(str(id))
+            nid = {'tipo': simbolos[token], 'lexema': str(id), 'valor': 'null'}
+            lista_tokens.append(nid)
             id = list(id)
             ite = len(id)
             for i in range(ite):
@@ -378,7 +390,8 @@ def automata1CARAC(lista):
             for token in [id]:
                 if token in simbolos_key:
                     print("<" + simbolos[token] + " " + str(id) + " null>")
-                    lista_tokens.append(str(id))
+                    nid = {'tipo': simbolos[token], 'lexema': str(id), 'valor': 'null'}
+                    lista_tokens.append(nid)
                     id = list(id)
                     ite = len(id)
                     for i in range(ite):
@@ -389,7 +402,8 @@ def automata1CARAC(lista):
             for token in [id]:
                 if token in simbolos_key:
                     print("<" + simbolos[token] + " " + str(id) + " null>")
-                    lista_tokens.append(str(id))
+                    nid = {'tipo': simbolos[token], 'lexema': str(id), 'valor': 'null'}
+                    lista_tokens.append(nid)
                     id = list(id)
                     ite = len(id)
                     for i in range(ite):
@@ -400,7 +414,8 @@ def automata1CARAC(lista):
             for token in [id]:
                 if token in simbolos_key:
                     print("<" + simbolos[token] + " " + str(id) + " null>")
-                    lista_tokens.append(str(id))
+                    nid = {'tipo': simbolos[token], 'lexema': str(id), 'valor': 'null'}
+                    lista_tokens.append(nid)
                     id = list(id)
                     ite = len(id)
                     for i in range(ite):
@@ -418,6 +433,7 @@ def automataCAD(lista):
     for i in range(tama):
         if i==tama-1 and state==0 and str(lista[i])=='"':
             print("Error. Cadena inválida.")
+            print("No se realizará el análisis sintáctico.")
             #lista_tokens = []
             id=list(lista)
             ite = len(lista)
@@ -434,7 +450,8 @@ def automataCAD(lista):
         if i>0 and state==24 and str(lista[i])=='"':
             prov=id.replace('"', '')
             print("<STRING " +id + " " + prov +">")
-            lista_tokens.append(id)
+            nid={'tipo':'STRING', 'lexema': id, 'valor': prov}
+            lista_tokens.append(nid)
             id=list(id)
             #print(id)
             ite = len(id)
@@ -444,6 +461,7 @@ def automataCAD(lista):
             return lista
         elif i>0 and state==24 and str(lista[i])=='\n':
             print("Error. Cadena inválida.")
+            print("No se realizará el análisis sintáctico.")
             #lista_tokens = []
             id = list(lista)
             ite = len(lista)
@@ -453,6 +471,7 @@ def automataCAD(lista):
             return lista
         if i==tama-1 and str(lista[i])!='"':
             print("Error. Cadena inválida.")
+            print("No se realizará el análisis sintáctico.")
             #lista_tokens = []
             id=list(id)
             ite = len(id)
@@ -486,7 +505,8 @@ def automataRESIDEN(lista):
             for token in [id]:
                 if token in reservadas_key:
                     print("<" + reservadas[token] + " " + str(id) + " null>")
-                    lista_tokens.append(str(id))
+                    nid = {'tipo': reservadas[token], 'lexema': str(id), 'valor': 'null'}
+                    lista_tokens.append(nid)
                     id = list(id)
                     ite = len(id)
                     for i in range(ite):
@@ -494,7 +514,8 @@ def automataRESIDEN(lista):
                     return lista
                 else:
                     print("<IDENTIFIER " +id + " null>")
-                    lista_tokens.append(id)
+                    nid = {'tipo': 'IDENTIFIER', 'lexema': id, 'valor': 'null'}
+                    lista_tokens.append(nid)
                     id = list(id)
                     ite = len(id)
                     for i in range(ite):
@@ -505,7 +526,8 @@ def automataRESIDEN(lista):
             for token in [id]:
                 if token in reservadas_key:
                     print("<" + reservadas[token] + " " + str(id) + " null>")
-                    lista_tokens.append(str(id))
+                    nid = {'tipo': reservadas[token], 'lexema': str(id), 'valor': 'null'}
+                    lista_tokens.append(nid)
                     id = list(id)
                     ite = len(id)
                     for i in range(ite):
@@ -513,7 +535,8 @@ def automataRESIDEN(lista):
                     return lista
                 else:
                     print("<IDENTIFIER " + id + " null>")
-                    lista_tokens.append(id)
+                    nid = {'tipo': 'IDENTIFIER', 'lexema': id, 'valor': 'null'}
+                    lista_tokens.append(nid)
                     id = list(id)
                     ite = len(id)
                     for i in range(ite):
@@ -523,7 +546,7 @@ def automataRESIDEN(lista):
         i = i + 1
 
 
-simbolos = {'<': 'LESS', '<=': 'LESS-EQUAL', '>': 'GREATER', '>=': 'GREATER_EQUAL', '!': 'BANG', '!=': 'BANG_EQUAL',
+simbolos = {'<': 'LESS', '<=': 'LESS_EQUAL', '>': 'GREATER', '>=': 'GREATER_EQUAL', '!': 'BANG', '!=': 'BANG_EQUAL',
             '=': 'EQUAL', '==': 'EQUAL_EQUAL', '+': 'PLUS', '-': 'MINUS', '*': 'STAR', '/': 'SLASH', '{': 'LEFT_BRACE',
             '}': 'RIGHT_BRACE', '(': 'LEFT_PAREN', ')': 'RIGHT_PAREN', ',': 'COMMA', '.': 'DOT', ';': 'SEMICOLON'}
 simbolos_key = simbolos.keys()
