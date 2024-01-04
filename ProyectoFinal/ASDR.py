@@ -764,7 +764,7 @@ class ASDR:
             self.hayErrores = True
             print("Error, se esperaba una expresion de estado.")
 
-#Otras
+    #Otras
     #FUNCTION -> id (PARAMETERS_OPC) BLOCK
     def function(self):
         if self.preanalisis['tipo'] == TipoToken.IDENTIFIER:
@@ -792,3 +792,37 @@ class ASDR:
         if self.preanalisis['tipo'] == TipoToken.FUN:
             self.fun_decl()
             self.functions()
+
+    #PARAMETERS_OPC -> PARAMETERS
+    #PARAMETERS_OPC -> Ɛ
+    def parameters_opc(self, parameters):
+        if self.preanalisis['tipo'] == TipoToken.IDENTIFIER:
+            return self.parameters(parameters)
+        return parameters
+
+    #PARAMETERS -> id PARAMETERS_2
+    def parameters(self, parameters):
+        if self.preanalisis['tipo'] == TipoToken.IDENTIFIER:
+            self.coincidir(TipoToken.IDENTIFIER)
+            id = self.previous()
+            parameters.append(ExprVariable(id['lexema']))
+            parameters.extend(self.parameters_2())
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba un identificador.")
+
+        return parameters
+
+    #PARAMETERS_2 -> , id PARAMETERS_2
+    #PARAMETERS_2 -> Ɛ
+    def parameters_2(self):
+        aux = []
+        if self.preanalisis['tipo'] == TipoToken.COMMA:
+            self.coincidir(TipoToken.COMMA)
+            self.coincidir(TipoToken.IDENTIFIER)
+            id2 = self.previous()
+            aux.append(ExprVariable(id2['lexema']))
+            aux.extend(self.parameters_2())
+            return aux
+
+        return aux
