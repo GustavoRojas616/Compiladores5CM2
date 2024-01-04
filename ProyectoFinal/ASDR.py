@@ -386,3 +386,62 @@ class ASDR:
         if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
             return self.expression()
         return None
+
+#IF_STMT -> if (EXPRESSION) STATEMENT ELSE_STATEMENT
+    def if_stmt(self):
+        if self.preanalisis['tipo'] == TipoToken.IF:
+            self.coincidir(TipoToken.IF)
+            self.coincidir(TipoToken.LEFT_PAREN)
+            condition = self.expression()
+            print(f'Llegaste {condition}')
+            self.coincidir(TipoToken.RIGHT_PAREN)
+            thenBranch = self.statement()
+            elseBranch = self.else_stmt()
+            stmtif = StmtIf(condition, thenBranch, elseBranch)
+            print(stmtif)
+            return stmtif
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba la palabra reservada if.")
+
+    #ELSE_STATEMENT -> else STATEMENT
+    #ELSE_STATEMENT -> Ɛ
+    def else_stmt(self):
+        if self.preanalisis['tipo'] == TipoToken.ELSE:
+            self.coincidir(TipoToken.ELSE)
+            elseBranch = self.statement()
+            return elseBranch
+        #return
+
+    #PRINT_STMT -> print EXPRESSION ;
+    def print_stmt(self):
+        if self.preanalisis['tipo'] == TipoToken.PRINT:
+            self.coincidir(TipoToken.PRINT)
+            expression = self.expression()
+            self.coincidir(TipoToken.SEMICOLON)
+            pc = self.previous()
+            stmtp = StmtPrint(str(expression))
+            print(stmtp)
+            return stmtp
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba la palabra reservada print.")
+
+    #RETURN_STMT -> return RETURN_EXP_OPC ;
+    def return_stmt(self):
+        if self.preanalisis['tipo'] == TipoToken.RETURN:
+            self.coincidir(TipoToken.RETURN)
+            value = self.return_exp_opc()
+            print(f'return_stmt {value}')
+            self.coincidir(TipoToken.SEMICOLON)
+            return StmtReturn(value)
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba la palabra reservada return.")
+
+    #RETURN_EXP_OPC -> EXPRESSION
+    #RETURN_EXP_OPC -> Ɛ
+    def return_exp_opc(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            value = self.expression()
+            return value
