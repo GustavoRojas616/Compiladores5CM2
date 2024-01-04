@@ -227,7 +227,7 @@ class ASDR:
         for i in value:
             print(f'Aqui {i}')
 
-#Declaraciones
+|   #Declaraciones
     # DECLARATION -> FUN_DECL DECLARATION
     # DECLARATION -> VAR_DECL DECLARATION
     # DECLARATION -> STATEMENT DECLARATION
@@ -387,7 +387,7 @@ class ASDR:
             return self.expression()
         return None
 
-#IF_STMT -> if (EXPRESSION) STATEMENT ELSE_STATEMENT
+    #IF_STMT -> if (EXPRESSION) STATEMENT ELSE_STATEMENT
     def if_stmt(self):
         if self.preanalisis['tipo'] == TipoToken.IF:
             self.coincidir(TipoToken.IF)
@@ -472,3 +472,57 @@ class ASDR:
         else:
             self.hayErrores = True
             print("Error, se esperaba el uso de las llaves.")
+
+    #Expresiones
+    #EXPRESSION -> ASSIGNMENT
+    def expression(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            valor = self.assignment()
+            print(f'expression {valor}')
+            return valor
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una declaracion de estado, identificador o parentesis.")
+
+    #ASSIGNMENT -> LOGIC_OR ASSIGNMENT_OPC
+    def assignment(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            name = self.logic_or()
+            name = self.assignment_opc(name)
+            print(f'assignment {name}')
+            return name
+        else:
+            self.hayErrores = True
+            print("Error.")
+
+    #ASSIGNMENT_OPC -> = EXPRESSION
+    #ASSIGNMENT_OPC -> Ɛ
+    def assignment_opc(self, name):
+        if self.preanalisis['tipo'] == TipoToken.EQUAL:
+            self.coincidir(TipoToken.EQUAL)
+            value = self.expression()
+            exprAss = ExprAssign(name, value)
+            return exprAss
+        return name
+
+    #LOGIC_OR -> LOGIC_AND LOGIC_OR_2
+    def logic_or(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.logic_and()
+            expr = self.logic_or_2(expr)
+            print(f'logic_or {expr}')
+            return expr
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
+
+    #LOGIC_OR_2 -> or LOGIC_AND LOGIC_OR_2
+    #LOGIC_OR_2 -> Ɛ
+    def logic_or_2(self, expr):
+        if self.preanalisis['tipo'] == TipoToken.OR:
+            self.coincidir(TipoToken.OR)
+            operador = self.previous()
+            expr2 = self.logic_and()
+            expl = ExprLogical(expr, operador['lexema'], expr2)
+            return self.logic_or_2(expl)
+        return expr
