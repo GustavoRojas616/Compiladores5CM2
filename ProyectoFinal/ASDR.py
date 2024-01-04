@@ -1,16 +1,160 @@
-simbolos = {'LESS': '<', 'LESS-EQUAL': '<=', 'GREATER': '>', 'GREATER_EQUAL': '>=', 'BANG': '!', 'BANG_EQUAL': '!=',
-            'EQUAL': '=', 'EQUAL_EQUAL': '==', 'PLUS': '+', 'MINUS': '-', 'STAR': '*', 'SLASH': '/', 'LEFT_BRACE': '{',
-            'RIGHT_BRACE': '}', 'LEFT_PAREN': '(', 'RIGHT_PAREN': ')', 'COMMA': ',', 'DOT': '.', 'SEMICOLON': ';'}
-simbolos_values = simbolos.values()
-reservadas = {'AND': 'and', 'ELSE': 'else', 'FALSE': 'false', 'FOR': 'for', 'FUN': 'fun', 'IF': 'if', 'NULL': 'null',
-              'OR': 'or', 'PRINT': 'print', 'RETURN': 'return', 'TRUE': 'true', 'VAR': 'var', 'WHILE': 'while'}
-reservadas_values = reservadas.values()
+#Entrega lunes en la noche
+import sys
 
-tokens=['var', 'nombre', '=', '"Nombre"', ';', 'var', 'apellido1', '=', '"Apellido"', ';', 'print', 'nombre', '+', '" "', '+', 'apellido1', ';']
+class ExprAssign:
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
 
-preanalisis = 'perro55'
-print(preanalisis.isalnum())
+    def __str__(self):
+        return f"ExprAssign({self.name}{self.value})"
 
+class ExprBinary:
+    def __init__(self, left, operator, right):
+        self.left = left
+        self.operator = operator
+        self.right = right
+
+    def __str__(self):
+        return f"ExprBinary({self.left}{self.operator}{self.right})"
+
+class ExprCallFunction:
+    def __init__(self, callee, arguments):
+        self.callee = callee
+        self.arguments = arguments
+
+    def __str__(self):
+        return f"ExprCallFunction({self.callee}{self.arguments})"
+
+#class Expression:  (abstract class (?))
+#    def __init__(self):
+#        pass
+
+class ExprGet:
+    def __init__(self, object, name):
+        self.object = object
+        self.name = name
+
+    def __str__(self):
+        return f"ExprGet({self.object}{self.name})"
+class ExprGrouping:
+    def __init__(self, expression):
+        self.expression = expression
+
+    def __str__(self):
+        return f"ExprGrouping({self.expression})"
+
+class ExprLiteral:
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return f"ExprLiteral({self.value})"
+
+class ExprLogical:
+    def __init__(self, left, operator, right):
+        self.left = left
+        self.operator = operator
+        self.right = right
+
+    def __str__(self):
+        return f"ExprLogical({self.left}{self.operator}{self.right})"
+class ExprSet:
+    def __init__(self, object, name, value):
+        self.object = object
+        self.name = name
+        self.value = value
+
+    def __str__(self):
+        return f"ExprSet({self.object}{self.name}{self.value})"
+class ExprSuper:
+    def __init__(self, method):
+        self.method = method
+
+    def __str__(self):
+        return f"ExprSuper({self.method})"
+class ExprThis:
+    def __init__(self):
+        pass
+
+class ExprUnary:
+    def __init__(self, operator, right):
+        self.operator = operator
+        self.right = right
+
+    def __str__(self):
+        return f"ExprUnary({self.operator}{self.right})"
+class ExprVariable:
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return f"ExprVariable({self.name})"
+#class Statement:  (abstract class (?))
+#    def __init__(self):
+#        pass
+
+class StmtBlock:
+    def __init__(self, statements):
+        self.statements = statements
+
+    def __str__(self):
+        return f"StmtBlock({self.statements})"
+
+#class StmtClass:
+#    def __init__(self, name, superclass, methods):
+#        self.name = name
+#        self.superclass = superclass
+#        self.methods = methods
+
+class StmtExpression:
+    def __init__(self, expression):
+        self.expression = expression
+
+    def __str__(self):
+        return f"StmtExpression({self.expression})"
+
+class StmtFunction:
+    def __init__(self, name, params, body):
+        self.name = name
+        self.params = params
+        self.body = body
+    def __str__(self):
+        return f"StmtFunction({self.name}{self.params}{self.body})"
+class StmtIf:
+    def __init__(self, condition, thenBranch, elseBranch):
+        self.condition = condition
+        self.thenBranch = thenBranch
+        self.elseBranch = elseBranch
+
+    def __str__(self):
+        return f"StmtIf({self.condition}{self.thenBranch}{self.elseBranch})"
+
+class StmtLoop:
+    def __init__(self, condition, body):
+        self.condition = condition
+        self.body = body
+    def __str__(self):
+        return f"StmtLoop({self.condition}{self.body})"
+class StmtPrint:
+    def __init__(self, expression):
+        self.expression = expression
+
+    def __str__(self):
+        return f"StmtPrint({self.expression})"
+
+class StmtReturn:
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return f"StmtReturn({self.value})"
+class StmtVar:
+    def __init__(self, name, initializer):
+        self.name = name
+        self.initializer = initializer
+
+    def __str__(self):
+        return f"StmtVar({self.name}{self.initializer})"
 
 
 class ASDR:
