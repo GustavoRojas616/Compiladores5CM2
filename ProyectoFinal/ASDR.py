@@ -227,7 +227,7 @@ class ASDR:
         for i in value:
             print(f'Aqui {i}')
 
-|   #Declaraciones
+    #Declaraciones
     # DECLARATION -> FUN_DECL DECLARATION
     # DECLARATION -> VAR_DECL DECLARATION
     # DECLARATION -> STATEMENT DECLARATION
