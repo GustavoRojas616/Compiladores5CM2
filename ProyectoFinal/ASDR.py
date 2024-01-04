@@ -826,3 +826,25 @@ class ASDR:
             return aux
 
         return aux
+
+#ARGUMENTS_OPC -> EXPRESSION ARGUMENTS
+    #ARGUMENTS_OPC -> Ɛ
+    def arguments_opc(self, arguments):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.expression()
+            arguments.append(expr)
+            arguments.extend(self.arguments())
+            return arguments
+        return arguments
+
+    #ARGUMENTS -> , EXPRESSION ARGUMENTS
+    #ARGUMENTS -> Ɛ
+    def arguments(self):
+        aux = []
+        if self.preanalisis['tipo'] == TipoToken.COMMA:
+            self.coincidir(TipoToken.COMMA)
+            expr = self.expression()
+            aux.append(expr)
+            aux.extend(self.arguments())
+            return aux
+        return aux
