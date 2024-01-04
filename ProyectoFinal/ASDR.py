@@ -445,3 +445,30 @@ class ASDR:
         if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
             value = self.expression()
             return value
+
+    #WHILE_STMT -> while (EXPRESSION) STATEMENT
+    def while_stmt(self):
+        if self.preanalisis['tipo'] == TipoToken.WHILE:
+            self.coincidir(TipoToken.WHILE)
+            self.coincidir(TipoToken.LEFT_PAREN)
+            condition = self.expression()
+            self.coincidir(TipoToken.RIGHT_PAREN)
+            body = self.statement()
+            stmtl = StmtLoop(condition, body)
+            return stmtl
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba la palabra reservada while.")
+
+    #BLOCK -> {DECLARATION}
+    def block(self):
+        if self.preanalisis['tipo'] == TipoToken.LEFT_BRACE:
+            self.coincidir(TipoToken.LEFT_BRACE)
+            statementsb = []
+            stmtb = StmtBlock(self.declaration(statementsb))
+            print(f'Soy un block {statementsb}')
+            self.coincidir(TipoToken.RIGHT_BRACE)
+            return stmtb
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba el uso de las llaves.")
