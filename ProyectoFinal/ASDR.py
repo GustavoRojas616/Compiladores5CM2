@@ -317,3 +317,72 @@ class ASDR:
         else:
             self.hayErrores = True
             print('Error.')
+
+    #EXPR_STMT -> EXPRESSION;
+    def expr_stmt(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expression = self.expression()
+            self.coincidir(TipoToken.SEMICOLON)
+            return StmtExpression(expression)
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba un expresion de estado")
+
+    #FOR_STMT -> for(FOR_STMT_1 FOR_STMT_2 FOR_STMT_3)STATEMENT
+    def for_stmt(self):
+        if self.preanalisis['tipo'] == TipoToken.FOR:
+            self.coincidir(TipoToken.FOR)
+            self.coincidir(TipoToken.LEFT_PAREN)
+            initializer = self.for_stmt_1()
+            condition = self.for_stmt_2()
+            increment = self.for_stmt_3()
+            self.coincidir(TipoToken.RIGHT_PAREN)
+            body = self.statement()
+            if increment is not None:
+                body = StmtBlock([body, StmtExpression(increment)])
+            if condition is None:
+                condition = ExprLiteral(True)
+            body = StmtLoop(condition, body)
+            if initializer is not None:
+                body = StmtBlock([initializer, body])
+            return body
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba la palabra reservada for")
+
+    #FOR_STMT_1 -> VAR_DECL
+    #FOR_STMT_1 -> EXPR_STMT
+    #FOR_STMT_1 -> ;
+    def for_stmt_1(self):
+        if self.preanalisis['tipo'] == TipoToken.VAR:
+            return self.var_decl()
+        elif self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            return self.expr_stmt()
+        elif self.preanalisis['tipo'] == TipoToken.SEMICOLON:
+            self.coincidir(TipoToken.SEMICOLON)
+            return None
+        else:
+            self.hayErrores = True
+            print("Error, se esparaba la palabra reservada var, declaracion de estado o punto y coma")
+            return None
+
+    #FOR_STMT_2 -> EXPRESSION;
+    # FOR_STMT_2 -> ;
+    def for_stmt_2(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.expression()
+            self.coincidir(TipoToken.SEMICOLON)
+            return expr
+        elif self.preanalisis['tipo'] == TipoToken.SEMICOLON:
+            self.coincidir(TipoToken.SEMICOLON)
+            return None
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una declaracion de estado o un punto y coma.")
+            return None
+    #FOR_STMT_3 -> EXPRESSION
+    #FOR_STMT_3 -> Ɛ
+    def for_stmt_3(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            return self.expression()
+        return None
