@@ -698,3 +698,26 @@ class ASDR:
         else:
             self.hayErrores = True
             print("Error, se esperaba una expresion de estado.")
+
+ #CALL -> PRIMARY CALL_2
+    def call(self):
+        if self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.primary()
+            expr = self.call_2(expr)
+            print(f'call {expr}')
+            return expr
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
+
+    #CALL_2 -> (ARGUMENTS_OPC) CALL_2
+    #CALL_2 -> Ɛ
+    def call_2(self, expr):
+        arguments = []
+        if self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            self.coincidir(TipoToken.LEFT_PAREN)
+            lstArguments = self.arguments_opc(arguments)
+            self.coincidir(TipoToken.RIGHT_PAREN)
+            ecf = ExprCallFunction(expr, lstArguments)
+            return self.call_2(ecf)
+        return expr
