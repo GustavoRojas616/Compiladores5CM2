@@ -577,3 +577,75 @@ class ASDR:
             expb = ExprBinary(expr, operador['lexema'], expr2)
             return self.equality_2(expb)
         return expr
+
+    #COMPARISON -> TERM COMPARISON_2
+    def comparison(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.term()
+            expr = self.comparison_2(expr)
+            print(f'comparison {expr}')
+            return expr
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
+
+    #COMPARISON_2 -> > TERM COMPARISON_2
+    #COMPARISON_2 -> >= TERM COMPARISON_2
+    #COMPARISON_2 -> < TERM COMPARISON_2
+    #COMPARISON_2 -> <= TERM COMPARISON_2
+    #COMPARISON_2 -> Ɛ
+    def comparison_2(self, expr):
+        if self.preanalisis['tipo'] == TipoToken.GREATER:
+            self.coincidir(TipoToken.GREATER)
+            operador = self.previous()
+            expr2 = self.term()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.comparison_2(expb)
+        elif self.preanalisis['tipo'] == TipoToken.GREATER_EQUAL:
+            self.coincidir(TipoToken.GREATER_EQUAL)
+            operador = self.previous()
+            expr2 = self.term()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.comparison_2(expb)
+        elif self.preanalisis['tipo'] == TipoToken.LESS:
+            self.coincidir(TipoToken.LESS)
+            operador = self.previous()
+            expr2 = self.term()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.comparison_2(expb)
+        elif self.preanalisis['tipo'] == TipoToken.LESS_EQUAL:
+            self.coincidir(TipoToken.LESS_EQUAL)
+            operador = self.previous()
+            expr2 = self.term()
+            expb =ExprBinary(expr, operador['lexema'], expr2)
+            return self.comparison_2(expb)
+        return expr
+
+    #TERM -> FACTOR TERM_2
+    def term(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.factor()
+            expr = self.term_2(expr)
+            print(f'term {expr}')
+            return expr
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
+
+    #TERM_2 -> - FACTOR TERM_2
+    #TERM_2 -> + FACTOR TERM_2
+    #TERM_2 -> Ɛ
+    def term_2(self, expr):
+        if self.preanalisis['tipo'] == TipoToken.MINUS:
+            self.coincidir(TipoToken.MINUS)
+            operador = self.previous()
+            expr2 = self.factor()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.term_2(expb)
+        elif self.preanalisis['tipo'] == TipoToken.PLUS:
+            self.coincidir(TipoToken.PLUS)
+            operador = self.previous()
+            expr2 = self.factor()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.term_2(expb)
+        return expr
