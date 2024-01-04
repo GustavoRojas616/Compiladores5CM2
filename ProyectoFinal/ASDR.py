@@ -721,3 +721,45 @@ class ASDR:
             ecf = ExprCallFunction(expr, lstArguments)
             return self.call_2(ecf)
         return expr
+
+
+    #PRIMARY -> true
+    #PRIMARY -> false
+    #PRIMARY -> null
+    #PRIMARY -> number
+    #PRIMARY -> string
+    #PRIMARY -> id
+    #PRIMARY -> (EXPRESSION)
+    def primary(self):
+        if self.preanalisis['tipo'] == TipoToken.TRUE:
+            self.coincidir(TipoToken.TRUE)
+            return ExprLiteral(True)
+        elif self.preanalisis['tipo'] == TipoToken.FALSE:
+            self.coincidir(TipoToken.FALSE)
+            return ExprLiteral(False)
+        elif self.preanalisis['tipo'] == TipoToken.NULL:
+            self.coincidir(TipoToken.NULL)
+            return ExprLiteral(None)
+        elif self.preanalisis['tipo'] == TipoToken.NUMBER:
+            self.coincidir(TipoToken.NUMBER)
+            numero = self.previous()
+            #print(numero['valor'])
+            return ExprLiteral(numero['valor'])
+        elif self.preanalisis['tipo'] == TipoToken.STRING:
+            self.coincidir(TipoToken.STRING)
+            string = self.previous()
+            #print(string['valor'])
+            return ExprLiteral(string['valor'])
+        elif self.preanalisis['tipo'] == TipoToken.IDENTIFIER:
+            self.coincidir(TipoToken.IDENTIFIER)
+            id = self.previous()
+            #print(id['lexema'])
+            return ExprVariable(id['lexema'])
+        elif self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            self.coincidir(TipoToken.LEFT_PAREN)
+            expr = self.expression()
+            self.coincidir(TipoToken.RIGHT_PAREN)
+            return ExprGrouping(expr)
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
