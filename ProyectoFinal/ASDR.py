@@ -226,3 +226,30 @@ class ASDR:
         value = self.declaration(statements)
         for i in value:
             print(f'Aqui {i}')
+
+#Declaraciones
+    # DECLARATION -> FUN_DECL DECLARATION
+    # DECLARATION -> VAR_DECL DECLARATION
+    # DECLARATION -> STATEMENT DECLARATION
+    # DECLARATION -> Ɛ
+    def declaration(self, statements):
+
+        if self.preanalisis['tipo'] == TipoToken.FUN:
+            fundcl = self.fun_decl()
+            statements.append(fundcl)
+            self.declaration(statements)
+            #return fundcl
+
+        elif self.preanalisis['tipo'] == TipoToken.VAR:
+            vardcl = self.var_decl()
+            statements.append(vardcl)
+            self.declaration(statements)
+            #return vardcl
+
+        elif self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN or self.preanalisis['tipo'] == TipoToken.FOR or self.preanalisis['tipo'] == TipoToken.IF or self.preanalisis['tipo'] == TipoToken.PRINT or self.preanalisis['tipo'] == TipoToken.RETURN or self.preanalisis['tipo'] == TipoToken.WHILE or self.preanalisis['tipo'] == TipoToken.LEFT_BRACE:
+            stmt = self.statement()
+            statements.append(stmt)
+            self.declaration(statements)
+            print(f'masarriba {stmt}')
+            #return stmt
+        return statements
