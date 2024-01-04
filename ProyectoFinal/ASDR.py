@@ -848,3 +848,19 @@ class ASDR:
             aux.extend(self.arguments())
             return aux
         return aux
+
+    def coincidir(self, t):
+        if self.hayErrores:
+            sys.exit()
+        elif self.preanalisis['tipo'] == t:
+            self.i = self.i + 1
+            self.preanalisis = self.tokens[self.i]
+        else:
+            self.hayErrores = True
+            print("Error.")
+
+    def previous(self):
+        j = self.i - 1
+        last = self.tokens[j]
+
+        return last
