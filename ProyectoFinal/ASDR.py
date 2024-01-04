@@ -649,3 +649,52 @@ class ASDR:
             expb = ExprBinary(expr, operador['lexema'], expr2)
             return self.term_2(expb)
         return expr
+
+    #FACTOR -> UNARY FACTOR_2
+    def factor(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.unary()
+            expr = self.factor_2(expr)
+            print(f'factor {expr}')
+            return expr
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
+
+    #FACTOR_2 -> / UNARY FACTOR_2
+    #FACTOR_2 -> * UNARY FACTOR_2
+    #FACTOR_2 -> Ɛ
+    def factor_2(self, expr):
+        if self.preanalisis['tipo'] == TipoToken.SLASH:
+            self.coincidir(TipoToken.SLASH)
+            operador = self.previous()
+            expr2 = self.unary()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.factor_2(expb)
+        elif self.preanalisis['tipo'] == TipoToken.STAR:
+            self.coincidir(TipoToken.STAR)
+            operador = self.previous()
+            expr2 = self.unary()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.factor_2(expb)
+        return expr
+
+    #UNARY -> ! UNARY
+    #UNARY -> - UNARY
+    #UNARY -> CALL
+    def unary(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG:
+            self.coincidir(TipoToken.BANG)
+            operador = self.previous()
+            expr = self.unary()
+            return ExprUnary(operador['lexema'], expr)
+        elif self.preanalisis['tipo'] == TipoToken.MINUS:
+            self.coincidir(TipoToken.MINUS)
+            operador = self.previous()
+            expr = self.unary()
+            return ExprUnary(operador['lexema'], expr)
+        elif self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            return self.call()
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
