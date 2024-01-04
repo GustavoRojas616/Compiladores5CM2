@@ -526,3 +526,54 @@ class ASDR:
             expl = ExprLogical(expr, operador['lexema'], expr2)
             return self.logic_or_2(expl)
         return expr
+
+#LOGIC_AND -> EQUALITY LOGIC_AND_2
+    def logic_and(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.equality()
+            expr = self.logic_and_2(expr)
+            print(f'logic_and {expr}')
+            return expr
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
+
+    #LOGIC_AND_2 -> and EQUALITY LOGIC_AND_2
+    #LOGIC_AND_2 -> Ɛ
+    def logic_and_2(self, expr):
+        if self.preanalisis['tipo'] == TipoToken.AND:
+            self.coincidir(TipoToken.AND)
+            operador = self.previous()
+            expr2 = self.equality()
+            expl = ExprLogical(expr, operador['lexema'], expr2)
+            return self.logic_and_2(expl)
+        return expr
+
+    #EQUALITY -> COMPARISON EQUALITY_2
+    def equality(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            expr = self.comparison()
+            expr = self.equality_2(expr)
+            print(f'equality {expr}')
+            return expr
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba una expresion de estado.")
+
+    #EQUALITY_2 -> != COMPARISON EQUALITY_2
+    #EQUALITY_2 -> == COMPARISON EQUALITY_2
+    #EQUALITY_2 -> Ɛ
+    def equality_2(self, expr):
+        if self.preanalisis['tipo'] == TipoToken.BANG_EQUAL:
+            self.coincidir(TipoToken.BANG_EQUAL)
+            operador = self.previous()
+            expr2 = self.comparison()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.equality_2(expb)
+        elif self.preanalisis['tipo'] == TipoToken.EQUAL_EQUAL:
+            self.coincidir(TipoToken.EQUAL_EQUAL)
+            operador = self.previous()
+            expr2 = self.comparison()
+            expb = ExprBinary(expr, operador['lexema'], expr2)
+            return self.equality_2(expb)
+        return expr
