@@ -288,3 +288,32 @@ class ASDR:
             self.coincidir(TipoToken.EQUAL)
             initializer = self.expression()
             return initializer
+
+    #Sentencias
+    # STATEMENT -> EXPR_STMT
+    # STATEMENT -> FOR_STMT
+    # STATEMENT -> IF_STMT
+    # STATEMENT -> PRINT_STMT
+    # STATEMENT -> RETURN_STMT
+    # STATEMENT -> WHILE_STMT
+    # STATEMENT -> BLOCK
+    def statement(self):
+        if self.preanalisis['tipo'] == TipoToken.BANG or self.preanalisis['tipo'] == TipoToken.MINUS or self.preanalisis['tipo'] == TipoToken.TRUE or self.preanalisis['tipo'] == TipoToken.FALSE or self.preanalisis['tipo'] == TipoToken.NULL or self.preanalisis['tipo']==TipoToken.NUMBER or self.preanalisis['tipo']==TipoToken.STRING or self.preanalisis['tipo']==TipoToken.IDENTIFIER or self.preanalisis['tipo'] == TipoToken.LEFT_PAREN:
+            return self.expr_stmt()
+        elif self.preanalisis['tipo'] == TipoToken.FOR:
+            return self.for_stmt()
+        elif self.preanalisis['tipo'] == TipoToken.IF:
+            return self.if_stmt()
+        elif self.preanalisis['tipo'] == TipoToken.PRINT:
+            return self.print_stmt()
+        elif self.preanalisis['tipo'] == TipoToken.RETURN:
+            value = self.return_stmt()
+            print(f'Soy return {value}')
+            return value
+        elif self.preanalisis['tipo'] == TipoToken.WHILE:
+            return self.while_stmt()
+        elif self.preanalisis['tipo'] == TipoToken.LEFT_BRACE:
+            return self.block()
+        else:
+            self.hayErrores = True
+            print('Error.')
