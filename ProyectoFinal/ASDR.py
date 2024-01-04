@@ -763,3 +763,32 @@ class ASDR:
         else:
             self.hayErrores = True
             print("Error, se esperaba una expresion de estado.")
+
+#Otras
+    #FUNCTION -> id (PARAMETERS_OPC) BLOCK
+    def function(self):
+        if self.preanalisis['tipo'] == TipoToken.IDENTIFIER:
+            self.coincidir(TipoToken.IDENTIFIER)
+            id = self.previous()
+            self.coincidir(TipoToken.LEFT_PAREN)
+            parameters = []
+            param = self.parameters_opc(parameters)
+            #parameters.append(param)
+            for i in parameters:
+                print(f'Elementos param {i}')
+            self.coincidir(TipoToken.RIGHT_PAREN)
+            print(self.preanalisis['tipo'])
+            body = self.block()
+            print(body)
+            stmtf = StmtFunction(id['lexema'], param, body)
+            return stmtf
+        else:
+            self.hayErrores = True
+            print("Error, se esperaba un identificador.")
+
+    #FUNCTIONS -> FUN_DECL FUNCTIONS
+    #FUNCTIONS -> Ɛ
+    def functions(self):
+        if self.preanalisis['tipo'] == TipoToken.FUN:
+            self.fun_decl()
+            self.functions()
