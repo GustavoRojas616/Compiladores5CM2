@@ -253,3 +253,38 @@ class ASDR:
             print(f'masarriba {stmt}')
             #return stmt
         return statements
+
+    # FUN_DECL -> fun FUNCTION
+    def fun_decl(self):
+        if self.preanalisis['tipo'] == TipoToken.FUN:
+            self.coincidir(TipoToken.FUN)
+            fun = self.function()
+            return fun
+        else:
+            self.hayErrores = True
+            print('Error. Se esperaba la palabra reservada fun')
+
+    # VAR_DECL -> var id VAR_INIT;
+    def var_decl(self):
+        if self.preanalisis['tipo'] == TipoToken.VAR:
+            self.coincidir(TipoToken.VAR)
+            self.coincidir(TipoToken.IDENTIFIER) #Checar
+            name = self.previous()
+            initializer = self.var_init()
+            print(name)
+            self.coincidir(TipoToken.SEMICOLON)
+            pc = self.previous()
+            stmtv = StmtVar(name['lexema'], str(initializer))
+            print(stmtv)
+            return stmtv
+        else:
+            self.hayErrores = True
+            print("Error. Se esparaba la palabra reservada var")
+
+    # VAR_INIT -> = EXPRESSION
+    # VAR_INIT -> Ɛ
+    def var_init(self):
+        if self.preanalisis['tipo'] == TipoToken.EQUAL:
+            self.coincidir(TipoToken.EQUAL)
+            initializer = self.expression()
+            return initializer
